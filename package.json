@@ -1,0 +1,23 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+     "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amankumar0019/devtinder.git"
+  },
+  "author": "aman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Amankumar0019/devtinder/issues"
+  },
+  "homepage": "https://github.com/Amankumar0019/devtinder#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
