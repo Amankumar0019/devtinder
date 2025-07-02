@@ -21,6 +21,16 @@ app.get("/admin/getALLData",(req,res)=>{
 app.get("/admin/deleteUser",(req,res)=>{
   res.send("Deleted User");
 });
+app.get("/getUserData",(req,res)=>{
+  throw new Error("asjdlij");
+  res.send("userdata sent");
+  
+})
+app.use("/",(err,req,res,next)=>{
+  if(err){
+    res.status(500).send("something went wrong");
+  }
+});
 
 
 
