@@ -6,13 +6,26 @@ const app = express();
 
 // sequence of code matter 
 
-app.use("/", (req, res) => {
-  res.send("hello Welcome to the '/' end point!!");
-});
+// app.use("/", (req, res) => {
+//   res.send("hello Welcome to the '/' end point!!");
+// });
 
 // comment above 2 lines to make it work
 
 // if we type /hello/anything... it will go to /hello
+app.get("/user/:userid/:name/:password", (req, res) => {
+  console.log(req.params)
+  res.send({firstNmae:"Aman",lastName:"Kumar"});
+});
+
+app.post("/user", (req, res) => {
+  res.send("post user endpoint");
+});
+//Rejesxt the /user route to handle any path that ends with fly
+app.get(/.*fly$/, (req, res) => {
+  res.send("post user  aman");
+});
+
 app.use("/hello", (req, res) => {
   res.send("hello how are you!!");
 });
