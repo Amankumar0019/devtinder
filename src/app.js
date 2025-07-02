@@ -2,50 +2,27 @@ const express = require("express");
 
 const app = express();
 
-// if we have / route then /hello and /secret will not work as it first get / route
+//handle auth middleware for all get post .... requests
 
-// sequence of code matter 
+const {adminAuth,userAuth} = require("./middlewares/auth");
 
-// app.use("/", (req, res) => {
-//   res.send("hello Welcome to the '/' end point!!");
-// });
+app.use("/admin",adminAuth);
 
-// comment above 2 lines to make it work
+app.get("/user",userAuth,(req,res)=>{
+  res.send("user data sent")
+})
+app.post("/iser/login",userAuth,(req,res)=>{
+  res.send("user login successfully")
+})
 
-// if we type /hello/anything... it will go to /hello
-// app.get("/user/:userid/:name/:password", (req, res) => {
-//   console.log(req.params)
-//   res.send({firstNmae:"Aman",lastName:"Kumar"});
-// });
-
-app.get("/user", (req, res,next) => {
-  // res.send("post user endpoint");
-  next(); // this will call the next middleware or route handler
-
-},
-(req,res,next)=>{
-  console.log("Handeling the route 2");
-  // res.send("2nd rote handeler");
-  next(); // this will call the next middleware or route handler
-},
-
-(req,res,next)=>{
-  console.log("handeleing the route user3");
-  res.send("3rd response");
- 
+app.get("/admin/getALLData",(req,res)=>{
+  res.send("All data sent");
 });
-//Rejesxt the /user route to handle any path that ends with fly
-app.get(/.*fly$/, (req, res) => {
-  res.send("post user  aman");
+app.get("/admin/deleteUser",(req,res)=>{
+  res.send("Deleted User");
 });
 
-app.use("/hello", (req, res) => {
-  res.send("hello how are you!!");
-});
 
-app.use("/secret", (req, res) => {
-  res.send("How do you find me ? Are you god ??");
-});
 
 app.listen(3000, () => {
   console.log("Server is listing on port 3000...");
