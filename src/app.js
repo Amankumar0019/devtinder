@@ -13,13 +13,26 @@ const app = express();
 // comment above 2 lines to make it work
 
 // if we type /hello/anything... it will go to /hello
-app.get("/user/:userid/:name/:password", (req, res) => {
-  console.log(req.params)
-  res.send({firstNmae:"Aman",lastName:"Kumar"});
-});
+// app.get("/user/:userid/:name/:password", (req, res) => {
+//   console.log(req.params)
+//   res.send({firstNmae:"Aman",lastName:"Kumar"});
+// });
 
-app.post("/user", (req, res) => {
-  res.send("post user endpoint");
+app.get("/user", (req, res,next) => {
+  // res.send("post user endpoint");
+  next(); // this will call the next middleware or route handler
+
+},
+(req,res,next)=>{
+  console.log("Handeling the route 2");
+  // res.send("2nd rote handeler");
+  next(); // this will call the next middleware or route handler
+},
+
+(req,res,next)=>{
+  console.log("handeleing the route user3");
+  res.send("3rd response");
+ 
 });
 //Rejesxt the /user route to handle any path that ends with fly
 app.get(/.*fly$/, (req, res) => {
