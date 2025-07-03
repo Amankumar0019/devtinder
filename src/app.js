@@ -1,39 +1,38 @@
 const express = require("express");
-
+const connectDB=require("./config/database")
+const User=require("./models/user")
 const app = express();
 
-//handle auth middleware for all get post .... requests
+app.post("/signup",async(req,res)=>{
 
-const {adminAuth,userAuth} = require("./middlewares/auth");
+  const user= new User({
+    firstName:"Virat",
+    lastName:"Kholi",
+    emailId:"viratkholi@gmail.com",
+    password:"Virat@123"
+  });
 
-app.use("/admin",adminAuth);
-
-app.get("/user",userAuth,(req,res)=>{
-  res.send("user data sent")
-})
-app.post("/iser/login",userAuth,(req,res)=>{
-  res.send("user login successfully")
-})
-
-app.get("/admin/getALLData",(req,res)=>{
-  res.send("All data sent");
-});
-app.get("/admin/deleteUser",(req,res)=>{
-  res.send("Deleted User");
-});
-app.get("/getUserData",(req,res)=>{
-  throw new Error("asjdlij");
-  res.send("userdata sent");
-  
-})
-app.use("/",(err,req,res,next)=>{
-  if(err){
-    res.status(500).send("something went wrong");
+  try{
+  await user.save();
+  res.send("User Added successfully");
   }
+  catch(err){
+    res.statusMessage(400).send("Error saving the user"+err.message);
+  }
+ 
 });
 
-
-
+connectDB().then(()=>{
+    console.log("Database connected successfully");
+    
 app.listen(3000, () => {
   console.log("Server is listing on port 3000...");
 });
+
+})
+.catch((err)=>{
+    console.error("database cannot be connected");
+});
+
+
+
