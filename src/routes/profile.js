@@ -1,9 +1,10 @@
 const express = require('express');
 const {userAuth}=require("../middlewares/auth");
+const {validatesEditProfileData}=require("../utils/validation");
 
 const profileRouter= express.Router();
 
-profileRouter.get("/profile",userAuth,async(req,res)=>{
+profileRouter.get("/profile/view",userAuth,async(req,res)=>{
 
 try
  {
@@ -16,23 +17,18 @@ try
 });
 
 
-profileRouter.patch("/user",async(req,res)=>{
-  const userId=req.body.userId;
-  const data=req.body;
-
-  
-
+profileRouter.patch("/profile/edit",userAuth,async(req,res)=>{
   try{
-    const ALLOWED_UPDATES=["firstName","lastName","about","age","userId","about","gender","skill","photoUrl"];
-      const isUpdateAllowed=Object.keys(data).every((key)=>ALLOWED_UPDATES.includes(key));
-  if(!isUpdateAllowed){
-    return res.status(400).send("Invalid update fields");
-  }
+    if(!validatesEditProfileData(req)){
+        throw new Error("Invalid Edit Request")
+    }
 
-    await User.findByIdAndUpdate(userId,data,{
-      runValidators: true
-    });
-    res.send("User updated successfully!!");
+    const loggedInUser=req.user;
+
+    Object.keys(req.body).forEach((key)=>(loggedInUser[key]=req.body[key]));
+    await loggedInUser.save();
+    res.json({message:`${loggedInUser.firstName},Profile updated successfully`,
+    data:loggedInUser});
   }
    catch(err){
     res.status(400).send("Error fetching users: " + err.message);
