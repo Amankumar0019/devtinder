@@ -7,6 +7,7 @@ const {userAuth}=require("../middlewares/auth");
 const authRouter=express.Router();
 
 
+
 authRouter.post("/signup",async(req,res)=>{
   try{
     validateSignUpData(req);
@@ -22,8 +23,11 @@ const passwordhash=bcrypt.hashSync(password,10);
     gender,
     skill,
   });
-  await user.save();
-  res.send("User Added successfully");
+ const savedUser= await user.save();
+   const token= await user.getJWT();
+
+      res.cookie("token",token,{ expires: new Date(Date.now() + 1*3600000), httpOnly: true });
+      res.json({message:"User Added sucessfully!",data:savedUser});
   }
   catch(err){
     res.status(400).send("Error saving the user"+err.message);
@@ -42,9 +46,9 @@ authRouter.post("/login",async(req,res)=>{
     const isPasswordValid=await user.validatePassword(password) ;
     if(isPasswordValid){
       const token= await user.getJWT();
-      console.log(token);
+
       res.cookie("token",token,{ expires: new Date(Date.now() + 1*3600000), httpOnly: true });
-      res.send("Login successful");
+      res.send(user);
     }
     else{
       res.send("Invalid Credentials");
